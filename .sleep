@@ -1,17 +1,11 @@
 #!/bin/zsh
 
-echo $(blueutil -p) > ~/.bluestatus
-bluestatus=$(head -n 1 ~/.bluestatus)
-
-if [[ "$bluestatus" != "0" ]]; then
-    blueutil -p 0
+if [[ $(/opt/homebrew/bin/blueutil --power) == 1 ]]; then
+    /opt/homebrew/bin/blueutil --power 0
 fi
 
 if [[ $(networksetup -getairportpower en0) =~ "On" ]]; then
-	echo 1 > ~/.wifistatus
-	networksetup -setairportpower airport off
-else
-	echo 0 > ~/.wifistatus
+	networksetup -setairportpower en0 off
 fi
 
 services=$(networksetup -listallnetworkservices | sed '1d' | grep -v "Wi-Fi")

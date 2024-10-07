@@ -5,10 +5,10 @@ echo "              Airplane-Sleep Uninstaller v1.0 by ppkantorski"
 echo "================================================================================"
 echo " This uninstaller script removes Airplane-Sleep with custom options for"
 echo " choosing what you want to remove."
-echo "================================================================================"; sleep 1
+echo "================================================================================"; 
 echo
 vared -p "> Want to remove Airplane-Sleep? (y|n): " -c tmp
-sleep 2
+
 if [[ $(ps -o comm= $PPID) = iterm ]]; then
 	stty erase '^?'
 fi
@@ -16,7 +16,7 @@ fi
 while [[ "$tmp" != "y" && "$tmp" != "Y" && "$tmp" != "n" && "$tmp" != "N" ]]; do
 	unset tmp
 	vared -p " > Please enter 'y' for 'yes' or 'n' for 'no'. (y|n): " -c tmp
-	sleep 2
+	
 	if [[ $(ps -o comm= $PPID) = iterm ]]; then
 		stty erase '^?'
 	fi
@@ -34,7 +34,7 @@ if [[ "$tmp" == "y" || "$tmp" == "Y" ]]; then
 	while [[ "$tmp" != "y" && "$tmp" != "Y" && "$tmp" != "n" && "$tmp" != "N" ]]; do
 		unset tmp
 		vared -p " > Please enter 'y' for yes or 'n' for no. (y|n): " -c tmp
-		sleep 2
+		
 		if [[ $(ps -o comm= $PPID) = iterm ]]; then
 			stty erase '^?'
 		fi
@@ -46,14 +46,8 @@ if [[ "$tmp" == "y" || "$tmp" == "Y" ]]; then
 		#/Volumes/Airplane-Sleep/
 		rm -rf ~/.sleep
 		echo " >" ~/.sleep is now removed.
-		sleep 1
+		
 		rm -rf ~/.wakeup
-		echo " >" ~/.wakeup is now removed.
-		sleep 1
-		rm -rf ~/.bluestatus
-		echo " >" ~/.sleep is now removed.
-		sleep 1
-		rm -rf ~/.wifistatus
 		echo " >" ~/.wakeup is now removed.
 	fi
 	
@@ -71,7 +65,7 @@ if [[ "$tmp" == "y" || "$tmp" == "Y" ]]; then
 	while [[ "$tmp" != "y" && "$tmp" != "Y" && "$tmp" != "n" && "$tmp" != "N" ]]; do
 		unset tmp
 		vared -p " > Please enter 'y' for yes or 'n' for no. (y|n): " -c tmp
-		sleep 2
+		
 		if [[ $(ps -o comm= $PPID) = iterm ]]; then
 			stty erase '^?'
 		fi
@@ -84,7 +78,7 @@ if [[ "$tmp" == "y" || "$tmp" == "Y" ]]; then
 		brew services stop sleepwatcher
 		brew remove sleepwatcher
 		echo " > Homebrew packages have been removed!"
-		sleep 2
+		
 	fi
 
 	if [[ "$tmp" == "n" || "$tmp" == "N" ]]; then
@@ -97,13 +91,13 @@ if [[ "$tmp" == "y" || "$tmp" == "Y" ]]; then
 	if [[ $(ps -o comm= $PPID) = iterm ]]; then
 		stty erase '^?'
 	fi
-	#echo "================================================================================"; sleep 1
+	#echo "================================================================================"; 
 
 	
 	while [[ "$tmp" != "y" && "$tmp" != "Y" && "$tmp" != "n" && "$tmp" != "N" ]]; do
 		unset tmp
 		vared -p " > Please enter 'y' for yes or 'n' for no. (y|n): " -c tmp
-		sleep 2
+		
 		if [[ $(ps -o comm= $PPID) = iterm ]]; then
 			stty erase '^?'
 		fi
@@ -114,11 +108,11 @@ if [[ "$tmp" == "y" || "$tmp" == "Y" ]]; then
 		unset tmp
 		echo "================================================================================"
 		echo " > Removing Homebrew."
-		echo "================================================================================"; sleep 1
+		echo "================================================================================"; 
 		
 		ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
 		
-		echo "================================================================================"; sleep 1
+		echo "================================================================================"; 
 		[ ! -f "`which brew`" ] && echo "> Homebrew has been removed!"
 		
 	fi
@@ -135,5 +129,5 @@ fi
 
 unset tmp
 echo "> Now exiting uninstaller..."
-sleep 2
+
 exit

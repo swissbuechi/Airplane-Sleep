@@ -1,24 +1,22 @@
-# Airplane-Sleep (macOS Catalina and Mojave)
+# Airplane-Sleep (macOS)
 Disable wifi and bluetooth when closing your MacBook or putting it to sleep!
 
-# Features
-Here's a few simple commands that might help with saving battery life.  The configuration files should work on other versions of macOS, but I have not tested it yet myself.  Apparently wifi and bluetooth are still active when the MBP is closed and if you have something like Dropbox running, it could contribute to significant power drain.  Turning the antennas off can save battery and prevent some data from being transferred during sleep mode.
+## Features
+Here's a few simple commands that might help with saving battery life. The configuration files should work on other versions of macOS, but I have not tested it yet myself.  Apparently wifi and bluetooth are still active when the MBP is closed and if you have something like Dropbox running, it could contribute to significant power drain.  Turning the antennas off can save battery and prevent some data from being transferred during sleep mode.
 
-# Installation
+## Installation
 
-1. Mount Airplane-Sleep.dmg.  You may need to make the installer executable.  Open Terminal then type in
+1. Donwload or clone the repository
 
 ```bash
-chmod +x /Volumes/Airplane-Sleep/install.command
+chmod +x ./install.command
 ```
 
-2. Double-click on the install.command file.
+1. Allow the installer to everything.  You may be asked to change security preferences for "input monitoring" on your MacBook to allow the Homebrew package "sleepwatcher" to function properly.
 
-3. Allow the installer to everything.  You may be asked to change security preferences for "input monitoring" on your MacBook to allow the Homebrew package "sleepwatcher" to function properly.
+Now when the computer sleeps, it will automatically disable wifi if it's on and bluetooth if it's on as well.
 
-Now when the computer sleeps, it will automatically disable wifi if it's on and bluetooth if it's on as well.  If one of them are already turned off, it will remain off when sleep is disengaged.
-
-# Uninstallation
+## Uninstallation
 
 1. Open Terminal and type in
 
@@ -31,7 +29,7 @@ chmod +x /Volumes/Airplane-Sleep/uninstall.command
 3. Allow the uninstaller to remove what ever you want from what was installed.
 
 
-# Manual Installation
+## Manual Installation
 
 <details>
   <summary>Click to expand!</summary>
@@ -56,17 +54,12 @@ chmod +x /Volumes/Airplane-Sleep/uninstall.command
   cp /Volume/Airplane-Sleep/.sleep ~/
   cp /Volume/Airplane-Sleep/.wakeup ~/
   
-  echo 1 > ~/.bluestatus 
-  echo 1 > ~/.wifistatus
-  
   chmod +x ~/.sleep
   chmod +x ~/.wakeup
-  chmod +x ~/.bluestatus
-  chmod +x ~/.wifistatus
   ```
 </details>
 
-# Manual Uninstallation
+## Manual Uninstallation
 <details>
   <summary>Click to expand!</summary>
   
@@ -75,8 +68,6 @@ chmod +x /Volumes/Airplane-Sleep/uninstall.command
   ```bash
   rm -rf ~/.sleep
   rm -rf ~/.wakeup
-  rm -rf ~/.bluestatus
-  rm -rf ~/.wifistatus
   ```
   
   2. Uninstallation of Homebrew packages.
@@ -94,7 +85,7 @@ chmod +x /Volumes/Airplane-Sleep/uninstall.command
   ```
   </details>
 
-# Sidenote
+## Sidenote
 
 Hibernation is a super useful feature, especially with fast SSDs.  It might also be worth changing the sleep standby delay before hibernation.  These commands change the delay after sleeping to entering hibernation when on low power to 10 minutes (600 sec) and when on high power to 20 minutes (1200 sec).
 
@@ -103,7 +94,3 @@ Hibernation is a super useful feature, especially with fast SSDs.  It might also
 sudo pmset -a standbydelaylow 600
 sudo pmset -a standbydelayhigh 1200
 ```
-
-Disabling TurboBoost can also increase your battery but I doubt it will change anything with sleepmode...  Still, it's worth checking out.
-
-https://github.com/rugarciap/Turbo-Boost-Switcher

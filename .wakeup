@@ -1,19 +1,16 @@
 #!/bin/zsh
 
-bluestatus=$(head -n 1 ~/.bluestatus)
-wifistatus=$(head -n 1 ~/.wifistatus)
-
-if [[ "$bluestatus" != "0" ]]; then
-    blueutil -p 1
-fi
-
-if [[ "$wifistatus" != "0" ]]; then
-    networksetup -setairportpower airport on
-fi
-
-services=$(networksetup -listallnetworkservices| grep -v "Wi-Fi")
+services=$(networksetup -listallnetworkservices | grep -v "Wi-Fi")
 while IFS= read -r service; do
     if [[ $service == \** ]]; then
         networksetup -setnetworkserviceenabled "${service//\*}" on
     fi
 done <<< "$services"
+
+sleep 2
+
+other_active_interfaces=$(ifconfig | grep -E "status: active" | grep -v "en0")
+
+if [[ -z "$other_active_interfaces" ]]; then
+    networksetup -setairportpower en0 on
+fi
