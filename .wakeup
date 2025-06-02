@@ -1,16 +1,43 @@
 #!/bin/zsh
 
-services=$(networksetup -listallnetworkservices | grep -v "Wi-Fi")
-while IFS= read -r service; do
-    if [[ $service == \** ]]; then
-        networksetup -setnetworkserviceenabled "${service//\*}" on
+# Option to enable logging
+ENABLE_LOGGING=0
+
+LOGFILE="$HOME/.wakeup.log"
+log() {
+    if [[ $ENABLE_LOGGING -eq 1 ]]; then
+        echo "[$(date)] $1" >>"$LOGFILE"
     fi
-done <<< "$services"
+}
 
-sleep 2
+log "Script started"
 
-other_active_interfaces=$(ifconfig | grep -E "status: active" | grep -v "en0")
+log "Listing network services (excluding Wi-Fi)"
+services=$(networksetup -listallnetworkservices | grep -v "Wi-Fi")
+log "Services to check: $services"
+while IFS= read -r service; do
+    log "Checking service: $service"
+    if [[ $service == \** ]]; then
+        log "Enabling service: ${service//\*/}"
+        networksetup -setnetworkserviceenabled "${service//\*/}" on
+        log "Service ${service//\*/} enabled"
+    else
+        log "Service $service already enabled"
+    fi
+done <<<"$services"
 
-if [[ -z "$other_active_interfaces" ]]; then
+log "Sleeping for 1 second"
+sleep 1
+
+log "Listing currently active (connected) interfaces (excluding en0 (Wi-Fi) vmnetX and bridge100)"
+active_interfaces=$(ifconfig | awk -F: '/^[a-z0-9]+: / {iface=$1} /status: active/ {if (iface != "en0" && iface !~ /^vmenet[0-9]+$/ && iface != "bridge100") print iface}')
+log "Active interfaces: $active_interfaces"
+
+if [[ -z "$active_interfaces" ]]; then
+    log "No other active interfaces found. Turning Wi-Fi on."
     networksetup -setairportpower en0 on
+    log "Wi-Fi enabled"
+else
+    log "Other active interfaces found. Wi-Fi remains unchanged."
 fi
+log "Script finished"

@@ -1,16 +1,46 @@
 #!/bin/zsh
 
-if [[ $(/opt/homebrew/bin/blueutil --power) == 1 ]]; then
-    /opt/homebrew/bin/blueutil --power 0
-fi
+# Option to enable logging
+ENABLE_LOGGING=0
 
-if [[ $(networksetup -getairportpower en0) =~ "On" ]]; then
-	networksetup -setairportpower en0 off
-fi
-
-services=$(networksetup -listallnetworkservices | sed '1d' | grep -v "Wi-Fi")
-while IFS= read -r service; do
-    if [[ $service != \** ]]; then
-        networksetup -setnetworkserviceenabled "$service" off
+LOGFILE="$HOME/.sleep.log"
+log() {
+    if [[ $ENABLE_LOGGING -eq 1 ]]; then
+        echo "[$(date)] $1" >>"$LOGFILE"
     fi
-done <<< "$services"
+}
+
+log "Script started"
+
+log "Checking Bluetooth status"
+if [[ $(/opt/homebrew/bin/blueutil --power) == 1 ]]; then
+    log "Bluetooth is ON. Disabling Bluetooth..."
+    /opt/homebrew/bin/blueutil --power 0
+    log "Bluetooth disabled"
+else
+    log "Bluetooth already OFF"
+fi
+
+log "Checking Wi-Fi status"
+if [[ $(networksetup -getairportpower en0) =~ "On" ]]; then
+    log "Wi-Fi is ON. Disabling Wi-Fi..."
+    networksetup -setairportpower en0 off
+    log "Wi-Fi disabled"
+else
+    log "Wi-Fi already OFF"
+fi
+
+log "Listing network services (excluding Wi-Fi)"
+services=$(networksetup -listallnetworkservices | sed '1d' | grep -v "Wi-Fi")
+log "Services to check: $services"
+while IFS= read -r service; do
+    log "Checking service: $service"
+    if [[ $service != \** ]]; then
+        log "Disabling service: $service"
+        networksetup -setnetworkserviceenabled "$service" off
+        log "Service $service disabled"
+    else
+        log "Service $service already disabled"
+    fi
+done <<<"$services"
+log "Script finished"
